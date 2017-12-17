@@ -11,7 +11,7 @@ def get_root():
 def get_config():
     return join(get_root(), "config")
 
-def get_dirs(days):
+def get_dirs(days, use_abs=True):
     d0 = datetime.date.today()
     res = []
     for dd in days:
@@ -19,7 +19,10 @@ def get_dirs(days):
         y = dt.year
         m = dt.month
         d = dt.day
-        res.append(join(get_root(), "daily", str(y), str(m), str(d)))
+        if(use_abs):
+            res.append(join(get_root(), "daily", str(y), str(m), str(d)))
+        else:
+            res.append(join("daily", str(y), str(m), str(d)))
     return res
 
 def get_notefiles(tags=None, days=None):
@@ -44,12 +47,20 @@ def get_notefiles(tags=None, days=None):
     return note_list
 
 def get_timestamp(files):
-    return [
-        check_output(["openssl", "sha256", "-r", f]).split()[0]        
-        for f in files]
+    res = []
+    
+    for f in files:
+        if(os.name=="posix"):
+            ## for mac
+            x = check_output(["openssl", "dgst", "-sha256", f]).split()[1]
+        else:
+            ## for linux
+            x = check_output(["openssl", "sha256", "-r", f]).split()[0]
+        res.append(x)
+    return res
 
 if __name__=='__main__':
-    #print get_dirs([-2,1,0])
-    print get_notefiles(["lif"])
+    print get_timestamp(["daily.py"])
+    #print get_notefiles(["lif"])
 
 

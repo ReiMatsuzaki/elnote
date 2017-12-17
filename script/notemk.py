@@ -2,11 +2,12 @@ import os
 join = os.path.join
 exists = os.path.exists
 from shutil import copyfile
-from subprocess import check_output
+from subprocess import check_call, check_output
 import argparse
 from notelib import get_notefiles, get_timestamp, get_root
 
 NoteRoot = os.path.abspath("../")
+
 
 def run():
     parser = argparse.ArgumentParser(description="notemk")
@@ -30,8 +31,9 @@ def run():
         check_output(["sleep", str(interval)])
         current = get_timestamp(notefiles)
         if(last!=current):
-            check_output(["pandoc"] + notefiles +
-                         ["-o", join(build_dir, "note_doc.tex")])
+            cmd = ["pandoc"] + notefiles + ["-o", join(build_dir, "note_doc.tex")]
+            print cmd
+            check_call(cmd)
             os.chdir(build_dir)
             check_output(["latexmk", "note.tex"])
             os.chdir(NoteRoot)
