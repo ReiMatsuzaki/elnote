@@ -1,0 +1,17 @@
+*.dvi
+*.aux
+*.bbl
+*.blg
+*.log
+*.bib
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.pyc
+/**/.ipynb_checkpoints/
+auto/
+
+build/*
+daily/
+
+
