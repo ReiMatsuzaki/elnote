@@ -28,9 +28,18 @@ def run():
              join(build_dir, "note.tex"))
     
     while True:
+        print 1
         check_output(["sleep", str(interval)])
         current = get_timestamp(notefiles)
         if(last!=current):
+            cmd = ["pandoc"] + notefiles + ["-o", join(NoteRoot, notename+".html")]
+            print cmd
+            try:
+                check_output(cmd)
+            except(Exception) as e:
+                print "error"
+                print e.message
+            """
             cmd = ["pandoc"] + notefiles + ["-o", join(build_dir, "note_doc.tex")]
             print cmd
             check_call(cmd)
@@ -39,6 +48,7 @@ def run():
             os.chdir(NoteRoot)
             copyfile(join(build_dir, "note.pdf"),
                      join(NoteRoot, notename+".pdf"))
+            """
             last = current
         
 run()
