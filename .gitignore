@@ -11,7 +11,8 @@
 /**/.ipynb_checkpoints/
 auto/
 
-build/*
+dist/
+build/
 daily/
 
 

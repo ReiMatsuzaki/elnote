@@ -6,16 +6,16 @@ from subprocess import check_call
 import argparse
 from notelib import get_dirs
 
-def run():    
+def run():
     remote = "portia:/home/matsuzaki/Note/"
     local = expanduser("~/Note/")
-    flag = "-av"
+    flag = "-avu"
 
     parser = argparse.ArgumentParser(description="sync")
     parser.add_argument("cmd")
     args = parser.parse_args()
     
-    ds = get_dirs([-1, 0], use_abs=False)
+    ds = get_dirs(range(-3, 1), use_abs=False)
     for d in ds:
         l = local+d + "/"
         r = remote+d + "/"
