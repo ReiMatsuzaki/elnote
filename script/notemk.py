@@ -23,9 +23,9 @@ def run():
     last = [0 for nf in notefiles]
     os.chdir(NoteRoot)
 
-    """
     if(not exists(build_dir)):
         os.makedirs(build_dir)
+    """
     copyfile(join(NoteRoot, "config/note.tex"),
              join(build_dir, "note.tex"))
     """
