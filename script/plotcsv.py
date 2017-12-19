@@ -126,6 +126,7 @@ def run():
         if(define_x):
             ylbls = label_list
         else:
+            plt.xlabel(label_list[0])
             x = df[label_list[0]]
             define_x = True
             ylbls = label_list[1:]

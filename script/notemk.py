@@ -10,6 +10,7 @@ from notelib import get_notefiles, get_timestamp, get_root
 NoteRoot = os.path.abspath("../")
 from datetime import datetime
 
+cmd_pandoc = ["pandoc", "--mathml", "-t", "html5"]
 
 def run():
     parser = argparse.ArgumentParser(description="notemk")
@@ -21,10 +22,8 @@ def run():
     dist_dir = join(get_root(), "dist")
     
     interval = 1
-    notefiles = get_notefiles(args.tags)
-    for note in notefiles:
-        print note
-        
+    notefiles = get_notefiles(args.tags)    
+    
     last = [0 for nf in notefiles]
     os.chdir(NoteRoot)
 
@@ -46,11 +45,15 @@ def run():
                 check_call(cmd, stdout=
             """
                 
-            cmd = ["pandoc"] + notefiles + ["-o", join(dist_dir, notename+".html")]
+            cmd = cmd_pandoc + notefiles + [ "-o", join(dist_dir, notename+".html")]
             print
             print datetime.now().strftime("%Y/%m/%d %H:%M:%S")
             print "update notebook."
             print "tags=", args.tags
+            print "note:"
+            for note in notefiles:
+                print note
+            
             try:
                 check_output(cmd)
             except(Exception) as e:
