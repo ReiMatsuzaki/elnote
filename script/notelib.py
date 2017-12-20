@@ -38,12 +38,13 @@ def get_notefiles(tags=None, days=None):
         if(exists(dir_day)):
             for dd in os.listdir(dir_day):
                 d = join(dir_day, dd)
-                with open(join(d, "TAG")) as f:
-                    tags0 = f.read().split()
-                if(tags is None):
-                    note_list.append(join(d, "note.org"))
-                elif(all([(t in tags0) for t in tags])):
-                    note_list.append(join(d, "note.md"))
+                if(os.path.isdir(d)):
+                    with open(join(d, "TAG")) as f:
+                        tags0 = f.read().split()
+                    if(tags is None):
+                        note_list.append(join(d, "note.org"))
+                    elif(all([(t in tags0) for t in tags])):
+                        note_list.append(join(d, "note.md"))
     return note_list
 
 def get_timestamp(files):
