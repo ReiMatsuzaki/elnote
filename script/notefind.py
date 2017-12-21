@@ -14,11 +14,16 @@ def run():
     parser.add_argument("tags", nargs='*')
     parser.add_argument("-l", "--length", default=5)
     parser.add_argument("-n", "--num", type=int, default=0)
+    parser.add_argument("-d", "--directory", action='store_true', default=False)
     args = parser.parse_args()
 
     notefiles = get_notefiles(args.tags, range(-args.length,1))
     for note in notefiles:
-        print note
+        if(args.directory):
+            print os.dirname(note)
+        else:
+            print note
+            
         if(args.num!=0):
             with open(note, "r") as f:
                 n = 0
