@@ -13,7 +13,7 @@ import vt100
 def run():
     parser = argparse.ArgumentParser(description="notemk")
     parser.add_argument("tags", nargs='*')
-    parser.add_argument("-l", "--length", default=5)
+    parser.add_argument("-l", "--length", default=30)
     parser.add_argument("-n", "--num", type=int, default=0)
     parser.add_argument("-d", "--directory", action='store_true', default=False)
     parser.add_argument("--onlyheader", action='store_true', default=False)

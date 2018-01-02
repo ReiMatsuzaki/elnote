@@ -11,24 +11,27 @@ NoteRoot = os.path.abspath("../")
 from datetime import datetime
 
 cmd_pandoc = ["pandoc", "--mathml", "-t", "html5"]
+#cmd_pandoc = ["pandoc", "--mathjax=script/dynoload.js","-t", "html5"]
 
 def run():
     parser = argparse.ArgumentParser(description="notemk")
     parser.add_argument("tags", nargs='*')
     parser.add_argument("-n", "--name", default="note")
+    parser.add_argument("-l", "--length", default=30)
     args = parser.parse_args()
     notename = args.name
-    # dist_dir = join(get_root(), "dist", notename)
-    dist_dir = join(get_root(), "dist")
-    
-    interval = 1
-    notefiles = get_notefiles(args.tags)    
-    
-    last = [0 for nf in notefiles]
-    os.chdir(NoteRoot)
+    dist_dir  = join(get_root(), "dist")
 
     if(not exists(dist_dir)):
         os.makedirs(dist_dir)
+    
+    interval = 1
+    notefiles = get_notefiles(args.tags, range(-int(args.length),1))
+    modfiles  = [f+".md" for f in notefiles]
+    
+    last = [0 for nf in notefiles]
+    os.chdir(NoteRoot)
+    
     """
     copyfile(join(NoteRoot, "config/note.tex"),
              join(build_dir, "note.tex"))
@@ -38,37 +41,35 @@ def run():
         check_output(["sleep", str(interval)])
         current = get_timestamp(notefiles)
         if(last!=current):
-            """
-            for notefile in notefiles:
-                cmd = ["sed", "s/\]\(fig/\]\("+os.path.dirname(notefile)+"\\/fig/g",
-                       notefile]
-                check_call(cmd, stdout=
-            """
-                
-            cmd = cmd_pandoc + notefiles + [ "-o", join(dist_dir, notename+".html")]
-            print
+
+            for i in range(len(notefiles)):
+                if(last[i]!=current[i]):
+                    d = os.path.dirname(notefiles[i])
+                    fi = open(notefiles[i], "r")
+                    fo = open(modfiles[i], "w")
+                    lines = fi.read()
+                    lines = lines.replace("fig", d+"/fig")
+                    fo.write(lines)
+                    fi.close()
+                    fo.close()
+                    print
+                    print datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+                    print "update notebook."
+                    print "tags=", args.tags
+                    print "note:", notefiles[i]
+ 
+            cmd = cmd_pandoc + modfiles + [ "-o", join(dist_dir, notename+".html")]
+            print ""
             print datetime.now().strftime("%Y/%m/%d %H:%M:%S")
-            print "update notebook."
-            print "tags=", args.tags
-            print "note:"
-            for note in notefiles:
-                print note
-            
+            print "pandoc begin"
             try:
                 check_output(cmd)
             except(Exception) as e:
-                print "error"
+                print "error"                
                 print e.message
-            """
-            cmd = ["pandoc"] + notefiles + ["-o", join(build_dir, "note_doc.tex")]
-            print cmd
-            check_call(cmd)
-            os.chdir(build_dir)
-            check_output(["latexmk", "note.tex"])
-            os.chdir(NoteRoot)
-            copyfile(join(build_dir, "note.pdf"),
-                     join(NoteRoot, notename+".pdf"))
-            """
+                sys.exit("stop notemk.py ...")
+
+            print "pandoc end"
             last = current
         
 run()
