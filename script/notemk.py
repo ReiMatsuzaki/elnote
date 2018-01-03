@@ -1,3 +1,4 @@
+import sys
 import os
 join = os.path.join
 exists = os.path.exists
@@ -10,7 +11,8 @@ from notelib import get_notefiles, get_timestamp, get_root
 NoteRoot = os.path.abspath("../")
 from datetime import datetime
 
-cmd_pandoc = ["pandoc", "--mathml", "-t", "html5"]
+cmd_pandoc = ["pandoc", "--mathml", "-t", "html5", "-c", join(NoteRoot, "config/github.css"), "--metadata", "title=note", "-s"]
+cmd_reload = ["osascript", join(NoteRoot, "script", "reload_safari.scpt")]
 #cmd_pandoc = ["pandoc", "--mathjax=script/dynoload.js","-t", "html5"]
 
 def run():
@@ -64,6 +66,7 @@ def run():
             print "pandoc begin"
             try:
                 check_output(cmd)
+                check_output(cmd_reload)
             except(Exception) as e:
                 print "error"                
                 print e.message
