@@ -132,6 +132,14 @@ def run():
             ylbls = label_list[1:]
 
         for lbl in ylbls:
+            if(len(x)!=len(df[lbl])):
+                print "Error. length of x and y are different"
+                print "lbl:", lbl
+                print "len(x):", len(x)
+                print "len(y):", len(df[lbl])
+                print "stop plotcsv..."
+                sys.exit(1)
+                
             plt.plot(x, df[lbl], label=relpath+":"+lbl)
 
     ## -- xlim -- 
